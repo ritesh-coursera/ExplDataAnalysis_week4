@@ -1,0 +1,18 @@
+Task 4
+-------------------
+# Filtering all values in SCC.Level.Three column of dataframe SCC that contains string "Coal"
+library(stringr)
+library(dplyr)
+SCCCoal <- SCC %>% filter(str_detect(SCC.Level.Three, "Coal"))
+
+#Storing all the values of SCC.Level.Three column in dataframe SCCCoal in a vector SCCCoalUnique  
+SCCCoalUnique <- unique(SCCCoal[,1])
+
+#Filtering rows of NEI having column SCC equal to values of SCCCoalUnique vector (having string "coal") 
+NEICoal <- NEI %>% filter(SCC %in% SCCCoalUnique)
+
+#summing up coal related emission by year
+NEICoalAgg <- data.frame(year = c(1999,2002,2005,2008), CoalRelatedEmission = c(with(NEICoal,sum(subset(Emissions,year==1999))),with(NEICoal,sum(subset(Emissions,year==2002))),with(NEICoal,sum(subset(Emissions,year==2005))),with(NEICoal,sum(subset(Emissions,year==2008)))))
+
+plot(NEICoal,type="o",pch=-2,ylab="Total Coal related Emission by year")
+dev.copy(png,file = "Task4.png");dev.off()

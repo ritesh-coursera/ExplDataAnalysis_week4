@@ -1,0 +1,12 @@
+
+#Task 2
+
+#Extracting Baltimore county data to a dataframe
+NEIBaltimore <- subset(NEI,fips == "24510")
+
+# Summing up Baltimore county emission year wise
+dfBaltimore <- data.frame(year = c(1999,2002,2005,2008), EmissionByYear = c(with(NEIBaltimore,sum(subset(Emissions,year==1999))),with(NEIBaltimore,sum(subset(Emissions,year==2002))),with(NEIBaltimore,sum(subset(Emissions,year==2005))),with(NEIBaltimore,sum(subset(Emissions,year==2008)))))
+
+
+plot(dfBaltimore,type="o",pch=-2,ylab="Total Emission by year for Baltimore")
+dev.copy(png,file = "Task2.png");dev.off()

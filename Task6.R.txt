@@ -1,0 +1,22 @@
+#Task 6
+
+# Extracting Los Angeles County rows from NEI
+NEILA <- subset(NEI,fips == "06037")
+
+#Filtering rows from NEILA having "Motor" in SCC code 
+NEILAMotor <- NEILA %>% filter(SCC %in% SCCMotorUnique)
+
+#summing up Motor related emission by year for LA
+NEILAMotorAgg <- data.frame(year = c(1999,2002,2005,2008), MotorRelatedEmission = c(with(NEILAMotor,sum(subset(Emissions,year==1999))),with(NEILAMotor,sum(subset(Emissions,year==2002))),with(NEILAMotor,sum(subset(Emissions,year==2005))),with(NEILAMotor,sum(subset(Emissions,year==2008)))))
+
+#Adding a new column "County" to LA dataframe 
+LA <- data.frame(year = NEILAMotorAgg$year,Emission = NEILAMotorAgg$MotorRelatedEmission,County="Los Angeles")
+
+#Similarly Adding a new column "County" to Baltimore dataframe
+Baltimore <- data.frame(year = NEIBaltimoreMotorAgg$year,Emission = NEIBaltimoreMotorAgg$MotorRelatedEmission,County="Baltimore")
+
+#Merging LA and Baltimore vertically
+BaltimoreAndLA <- rbind(LA,Baltimore)
+
+ggplot(BaltimoreAndLA,aes(year,Emission,col=County)) + geom_line()
+dev.copy(png,file = "Task6.png");dev.off()

@@ -1,0 +1,22 @@
+#Task 5
+
+# Filtering all values in SCC.Level.Three column of dataframe SCC that contains string "Motor"
+# Including both motorcycle and motorvehicle
+library(stringr)
+library(dplyr)
+SCCMotor <- SCC %>% filter(str_detect(SCC.Level.Three, "Motor"))
+
+#Storing all the values in SCC.Level.Three column of SCCMotor to vector SCCMotorUnique  
+SCCMotorUnique <- unique(SCCMotor[,1])
+
+# Extracting Baltimore rows from NEI
+NEIBaltimore <- subset(NEI,fips == "24510")
+
+#Filtering rows from NEIBaltimore having "Motor" in SCC code 
+NEIBaltimoreMotor <- NEIBaltimore %>% filter(SCC %in% SCCMotorUnique)
+
+#summing up Motor related emission by year
+NEIBaltimoreMotorAgg <- data.frame(year = c(1999,2002,2005,2008), MotorRelatedEmission = c(with(NEIBaltimoreMotor,sum(subset(Emissions,year==1999))),with(NEIBaltimoreMotor,sum(subset(Emissions,year==2002))),with(NEIBaltimoreMotor,sum(subset(Emissions,year==2005))),with(NEIBaltimoreMotor,sum(subset(Emissions,year==2008)))))
+
+plot(NEIBaltimoreMotorAgg,type="o",pch=-2,ylab="Total Motor related Emission at Baltimore")
+dev.copy(png,file = "Task5.png");dev.off()
